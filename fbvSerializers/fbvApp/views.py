@@ -20,3 +20,19 @@ def student_list(request):
             serializer.save()
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+def student_details(request, pk):
+    try:
+        student = Student.objects.get(pk=pk)
+
+    except student.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = StudentSerializer(student, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
